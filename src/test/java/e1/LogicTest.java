@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class LogicTest {
@@ -15,7 +16,7 @@ public class LogicTest {
   @BeforeEach
   public void initializeLogic() {
     this.logic = new LogicsImpl(fieldSize);
-    this.knightPosition = this.getKingPosition();
+    this.knightPosition = this.getKnightPosition();
   }
 
   @Test
@@ -37,7 +38,7 @@ public class LogicTest {
     Pair<Integer, Integer> newKnightPosition = new Pair<Integer, Integer>(newRowKnight, newColumnKnight);
     if (this.isPositionInsideField(newKnightPosition)) {
       this.logic.hit(newRowKnight, newColumnKnight);
-      this.knightPosition = this.getKingPosition();
+      this.knightPosition = this.getKnightPosition();
       assertEquals(newKnightPosition, this.knightPosition);
     } else {
       assertThrows(IndexOutOfBoundsException.class, () -> this.logic.hit(newRowKnight, newColumnKnight));
@@ -50,19 +51,27 @@ public class LogicTest {
     IntStream.range(0, movementsNumber).forEach(step -> this.testMovement());
   }
 
-  private Pair<Integer, Integer> getKingPosition() {
-    Pair<Integer, Integer> position = new Pair<Integer, Integer>(null, null);
+  private Pair<Integer, Integer> getKnightPosition() {
+    return this.getFulfilPosition(element -> this.logic.hasKnight(element.getX(), element.getY()));
+  }
+
+  private Pair<Integer, Integer> getFulfilPosition(Predicate<Pair<Integer, Integer>> predicate) {
+    Pair<Integer, Integer> positionFound = new Pair<Integer, Integer>(null, null);
     for (int row = 0; row < this.fieldSize; row++) {
       for (int column = 0; column < this.fieldSize; column++) {
-        if (this.logic.hasKnight(row, column)) {
-          position = new Pair<Integer, Integer>(row, column);
+        if (predicate.test(this.createIntegerPair(row, column))) {
+          positionFound = new Pair<Integer, Integer>(row, column);
         }
       }
     }
-    if (position.getX() == null) {
+    if (positionFound.getX() == null || positionFound.getY() == null) {
       throw new NoSuchElementException();
     }
-    return position;
+    return positionFound;
+  }
+
+  private Pair<Integer, Integer> createIntegerPair(int x, int y) {
+    return new Pair<Integer, Integer>(x, y);
   }
 
   private boolean isPositionInsideField(Pair<Integer, Integer> position) {
