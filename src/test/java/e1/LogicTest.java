@@ -3,6 +3,8 @@ package e1;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -13,10 +15,19 @@ public class LogicTest {
   private int fieldSize = 5;
   private Pair<Integer, Integer> knightPosition;
   private Pair<Integer, Integer> pawnPositions;
+  List<Pair<Integer, Integer>> captureSequence;
 
   @BeforeEach
   public void initializeLogic() {
-    this.logic = new LogicsImpl(fieldSize,new Pair<Integer, Integer>(0, 0),new Pair<Integer, Integer>(0, 0));
+    var startKnightPosition = new Pair<Integer, Integer>(1, 3);
+    var startPawnPosition = new Pair<Integer, Integer>(0, 0);
+
+    this.captureSequence = new ArrayList<>();
+    this.captureSequence.add(new Pair<Integer, Integer>(2, 1));
+    this.captureSequence.add(startPawnPosition);
+
+    this.logic = new LogicsImpl(fieldSize, startPawnPosition, startKnightPosition);
+
     this.knightPosition = this.getKnightPosition();
     this.pawnPositions = this.getPawnPosition();
   }
@@ -25,14 +36,14 @@ public class LogicTest {
   public void testKingPosition() {
     assertTrue(this.logic.hasKnight(this.knightPosition.getX(), this.knightPosition.getY()));
   }
-  
+
   @Test
   public void testWrongKingPosition() {
     Pair<Integer, Integer> wrongPosition = new Pair<Integer, Integer>((this.knightPosition.getX() + 1) % fieldSize,
-    (this.knightPosition.getY() + 1) % fieldSize);
+        (this.knightPosition.getY() + 1) % fieldSize);
     assertFalse(this.logic.hasKnight(wrongPosition.getX(), wrongPosition.getY()));
   }
-  
+
   @Test
   public void testPawnPosition() {
     assertTrue(this.logic.hasPawn(this.pawnPositions.getX(), this.pawnPositions.getY()));
@@ -41,7 +52,7 @@ public class LogicTest {
   @Test
   public void testWrongPawnPosition() {
     Pair<Integer, Integer> wrongPosition = new Pair<Integer, Integer>((this.pawnPositions.getX() + 1) % fieldSize,
-    (this.pawnPositions.getY() + 1) % fieldSize);
+        (this.pawnPositions.getY() + 1) % fieldSize);
     assertFalse(this.logic.hasPawn(wrongPosition.getX(), wrongPosition.getY()));
   }
 
@@ -63,6 +74,16 @@ public class LogicTest {
   public void testMovements() {
     int movementsNumber = 20;
     IntStream.range(0, movementsNumber).forEach(step -> this.testKnightMovement());
+  }
+
+  @Test
+  public void testSequencePawnCapture() {
+    var sequenceToLastPositionBeforeCapture = this.captureSequence.subList(0, this.captureSequence.size() - 1);
+    sequenceToLastPositionBeforeCapture
+        .forEach(movement -> assertFalse(this.logic.hit(movement.getX(), movement.getY())));
+
+    var lastMovement = this.captureSequence.get(this.captureSequence.size() - 1);
+    assertTrue(this.logic.hit(lastMovement.getX(), lastMovement.getY()));
   }
 
   private Pair<Integer, Integer> getKnightPosition() {
