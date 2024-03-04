@@ -16,7 +16,7 @@ public class LogicTest {
 
   @BeforeEach
   public void initializeLogic() {
-    this.logic = new LogicsImpl(fieldSize);
+    this.logic = new LogicsImpl(fieldSize,new Pair<Integer, Integer>(0, 0),new Pair<Integer, Integer>(0, 0));
     this.knightPosition = this.getKnightPosition();
     this.pawnPositions = this.getPawnPosition();
   }
