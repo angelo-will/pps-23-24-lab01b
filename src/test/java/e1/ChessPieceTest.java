@@ -1,5 +1,6 @@
 package e1;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,7 +25,7 @@ public class ChessPieceTest {
 
     @BeforeEach
     void initializePawnPiece() {
-        this.startinPawnPosition = new Pair<Integer,Integer>(1, 1);
+        this.startinPawnPosition = new Pair<Integer, Integer>(1, 1);
         this.pawn = new Pawn(this.startinPawnPosition.getX(), this.startinPawnPosition.getY());
     }
 
@@ -32,7 +33,7 @@ public class ChessPieceTest {
     public void testStartPawnPosition() {
         assertEquals(this.startinPawnPosition, this.pawn.getPosition());
     }
-    
+
     @Test
     public void testStartingKnightPosition() {
         assertEquals(this.startinKnightPosition, this.knight.getPosition());
@@ -52,23 +53,30 @@ public class ChessPieceTest {
         listSubZeroPositions.add(new Pair<Integer, Integer>(-1, 0));
         listSubZeroPositions.add(new Pair<Integer, Integer>(0, -1));
         listSubZeroPositions.forEach(position -> assertThrows(IllegalArgumentException.class,
-                () -> this.knight.makeMovement(position.getX(), position.getY())));
+                () -> this.knight.move(position.getX(), position.getY())));
     }
 
     @Test
     public void testInvalidMovements() {
-        List<Pair<Integer, Integer>> listInvalidMovementsFromStarting = new ArrayList<>();
-        listInvalidMovementsFromStarting.add(new Pair<Integer, Integer>(1, 1));
-        listInvalidMovementsFromStarting.add(new Pair<Integer, Integer>(2, 2));
-        listInvalidMovementsFromStarting.add(new Pair<Integer, Integer>(4, 4));
-        listInvalidMovementsFromStarting.forEach(position -> assertThrows(IllegalArgumentException.class,
-                () -> this.knight.makeMovement(position.getX(), position.getY())));
+        Pair<Integer, Integer> movementNotValid1 = new Pair<Integer, Integer>(this.startinKnightPosition.getX(),
+                this.startinKnightPosition.getY());
+        Pair<Integer, Integer> movementNotValid2 = new Pair<Integer, Integer>(1, 1);
+        Pair<Integer, Integer> movementNotValid3 = new Pair<Integer, Integer>(2, 2);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> this.knight.move(movementNotValid1.getX(), movementNotValid1.getY()));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> this.knight.move(movementNotValid2.getX(), movementNotValid2.getY()));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> this.knight.move(movementNotValid3.getX(), movementNotValid3.getY()));
     }
 
     @Test
     public void testMovementFromStartinPoint() {
         Pair<Integer, Integer> newPosition = new Pair<Integer, Integer>(2, 1);
-        this.knight.makeMovement(newPosition.getX(), newPosition.getY());
+        this.knight.move(newPosition.getX(), newPosition.getY());
         assertEquals(newPosition, this.knight.getPosition());
     }
 
@@ -78,7 +86,7 @@ public class ChessPieceTest {
         movements.add(new Pair<Integer, Integer>(2, 1));
         movements.add(new Pair<Integer, Integer>(1, 3));
         movements.add(new Pair<Integer, Integer>(3, 4));
-        movements.forEach(move -> this.knight.makeMovement(move.getX(), move.getY()));
+        movements.forEach(move -> this.knight.move(move.getX(), move.getY()));
         var finalKnightPosition = movements.get(movements.size() - 1);
         assertEquals(finalKnightPosition, this.knight.getPosition());
     }
