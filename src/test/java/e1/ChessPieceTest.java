@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 public class ChessPieceTest {
 
     private ChessPiece knight;
+    private ChessPiece pawn;
     private Pair<Integer, Integer> startinKnightPosition;
+    private Pair<Integer, Integer> startinPawnPosition;
 
     @BeforeEach
     void initializeKnightPiece() {
@@ -20,6 +22,17 @@ public class ChessPieceTest {
         this.knight = new Knight(this.startinKnightPosition.getX(), this.startinKnightPosition.getY());
     }
 
+    @BeforeEach
+    void initializePawnPiece() {
+        this.startinPawnPosition = new Pair<Integer,Integer>(1, 1);
+        this.pawn = new Pawn(this.startinPawnPosition.getX(), this.startinPawnPosition.getY());
+    }
+
+    @Test
+    public void testStartPawnPosition() {
+        assertEquals(this.startinPawnPosition, this.pawn.getPosition());
+    }
+    
     @Test
     public void testStartingKnightPosition() {
         assertEquals(this.startinKnightPosition, this.knight.getPosition());
