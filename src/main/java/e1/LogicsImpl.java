@@ -31,11 +31,12 @@ public class LogicsImpl implements Logics {
 	public boolean hit(int row, int col) {
 		if (this.isPositionOutsideField(row, col)){
 			throw new IllegalArgumentException();
-		} else {
+		} else if (this.knight.isMovementLogicValid(row, col)) {
 			System.out.println("Inside hit - row: " + row + " col: " + col);
 			this.knight.move(row, col);
 			return this.knight.getPosition().equals(this.pawn.getPosition());
 		}
+		return false;
 	}
 
 	@Override
