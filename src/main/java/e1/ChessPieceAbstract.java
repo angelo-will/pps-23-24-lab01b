@@ -7,6 +7,10 @@ public abstract class ChessPieceAbstract implements ChessPiece {
         this.setPosition(row, column);
     }
 
+    public ChessPieceAbstract(Pair<Integer, Integer> position) {
+        this(position.getX(), position.getY());
+    }
+
     public Pair<Integer, Integer> getPosition() {
         return position;
     }
@@ -20,8 +24,8 @@ public abstract class ChessPieceAbstract implements ChessPiece {
     }
 
     public void move(int row, int column) {
-        if (this.isMovementLogicValid(row, column) && this.isOverZeroPosition(row, column)
-                && !this.isSamePosition(row, column)) {
+        System.out.println("Inside ChessPieceAbstract.move() - row: " + row + " column: " + column);
+        if (this.isMovementLogicValid(row, column) && !this.isSamePosition(row, column)) {
             this.setPosition(row, column);
         } else {
             throw new IllegalArgumentException();

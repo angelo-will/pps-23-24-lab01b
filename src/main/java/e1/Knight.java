@@ -6,8 +6,13 @@ public class Knight extends ChessPieceAbstract {
         super(row, column);
     }
 
+    public Knight(Pair<Integer, Integer> position) {
+        super(position);
+    }
+
     @Override
     public boolean isMovementLogicValid(int row, int column) {
+        System.out.println("KNIGHT POSITION - " + this.getPosition());
         return Math.abs((this.getPosition().getX() - row) * (this.getPosition().getY() - column)) == 2;
     }
 

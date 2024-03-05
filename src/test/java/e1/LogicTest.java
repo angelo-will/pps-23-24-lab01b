@@ -61,12 +61,12 @@ public class LogicTest {
     int newRowKnight = this.knightPosition.getX() + 2;
     int newColumnKnight = this.knightPosition.getY() + 1;
     Pair<Integer, Integer> newKnightPosition = new Pair<Integer, Integer>(newRowKnight, newColumnKnight);
-    if (this.isPositionInsideField(newKnightPosition)) {
+    if (this.isPositionOutsideField(newKnightPosition.getX(), newKnightPosition.getY())) {
+      assertThrows(IllegalArgumentException.class, () -> this.logic.hit(newRowKnight, newColumnKnight));
+    } else {
       this.logic.hit(newRowKnight, newColumnKnight);
       this.knightPosition = this.getKnightPosition();
       assertEquals(newKnightPosition, this.knightPosition);
-    } else {
-      assertThrows(IndexOutOfBoundsException.class, () -> this.logic.hit(newRowKnight, newColumnKnight));
     }
   }
 
@@ -113,8 +113,7 @@ public class LogicTest {
     return new Pair<Integer, Integer>(x, y);
   }
 
-  private boolean isPositionInsideField(Pair<Integer, Integer> position) {
-    return position.getX() >= 0 && position.getX() < fieldSize
-        && position.getY() >= 0 && position.getY() < fieldSize;
-  }
+  private boolean isPositionOutsideField(int row, int column) {
+		return row < 0 || column < 0 || row >= this.fieldSize || column >= this.fieldSize;
+	}
 }

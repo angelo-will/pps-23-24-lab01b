@@ -1,54 +1,54 @@
 package e1;
 
-import java.util.*;
-
 public class LogicsImpl implements Logics {
 	
-	private final Pair<Integer,Integer> pawn;
-	private Pair<Integer,Integer> knight;
-	private final Random random = new Random();
-	private final int size;
+	private final int chessboardSize;
+
+	private ChessPiece knight;
+	private final ChessPiece pawn;
 	 
     public LogicsImpl(int size){
-    	this.size = size;
-        this.pawn = this.randomEmptyPosition();
-        this.knight = this.randomEmptyPosition();	
+    	this.chessboardSize = size;
+		// this.knight = new Knight(0,0);
+		// this.pawn = new Pawn(1,1);
+		this.pawn = new Pawn(Pairs.getIntegerRandomPair(size));
+		var knightPosition = this.getRandomEmptyPosition(this.pawn.getPosition());
+		this.knight = new Knight(knightPosition.getX(),knightPosition.getY());
     }
 
 	public LogicsImpl(int size, Pair<Integer, Integer> pawnPosition, Pair<Integer, Integer> knightPosition) {
-		this.size = size;
-		this.pawn = pawnPosition;
-		this.knight = knightPosition;
+		this.chessboardSize = size;
+		this.knight = new Knight(knightPosition);
+		this.pawn = new Pawn(pawnPosition);
 	}
 
-	private final Pair<Integer,Integer> randomEmptyPosition(){
-    	Pair<Integer,Integer> pos = new Pair<>(this.random.nextInt(size),this.random.nextInt(size));
-    	// the recursive call below prevents clash with an existing pawn
-    	return this.pawn!=null && this.pawn.equals(pos) ? randomEmptyPosition() : pos;
+	private final Pair<Integer,Integer> getRandomEmptyPosition(Pair<Integer, Integer> positionExcluded){
+		var randomPosition = Pairs.getIntegerRandomPair(this.chessboardSize);
+		return randomPosition == positionExcluded ? this.getRandomEmptyPosition(positionExcluded) : randomPosition;
     }
     
 	@Override
 	public boolean hit(int row, int col) {
-		if (row<0 || col<0 || row >= this.size || col >= this.size) {
-			throw new IndexOutOfBoundsException();
+		if (this.isPositionOutsideField(row, col)){
+			throw new IllegalArgumentException();
+		} else {
+			System.out.println("Inside hit - row: " + row + " col: " + col);
+			this.knight.move(row, col);
+			return this.knight.getPosition().equals(this.pawn.getPosition());
 		}
-		// Below a compact way to express allowed moves for the knight
-		int x = row-this.knight.getX();
-		int y = col-this.knight.getY();
-		if (x!=0 && y!=0 && Math.abs(x)+Math.abs(y)==3) {
-			this.knight = new Pair<>(row,col);
-			return this.pawn.equals(this.knight);
-		}
-		return false;
 	}
 
 	@Override
 	public boolean hasKnight(int row, int col) {
-		return this.knight.equals(new Pair<>(row,col));
+		return this.knight.getPosition().equals(new Pair<>(row, col));
 	}
-
+	
 	@Override
 	public boolean hasPawn(int row, int col) {
-		return this.pawn.equals(new Pair<>(row,col));
+		return this.pawn.getPosition().equals(new Pair<>(row, col));
+	}
+
+	private boolean isPositionOutsideField(int row, int column){
+		return row < 0 || column < 0 || row >= this.chessboardSize || column >= this.chessboardSize;
 	}
 }

@@ -6,6 +6,10 @@ public class Pawn extends ChessPieceAbstract {
         super(row, column);
     }
 
+    public Pawn(Pair<Integer, Integer> position){
+        super(position);
+    }
+
     @Override
     public boolean isMovementLogicValid(int row, int column) {
         return true;
