@@ -4,11 +4,11 @@ package e1;
  * A standard generic Pair<X,Y>, with getters, hashCode, equals, and toString well implemented. 
  */
 
-public class Pair<X,Y> {
-	
+public class Pair<X, Y> {
+
 	private final X x;
 	private final Y y;
-	
+
 	public Pair(X x, Y y) {
 		super();
 		this.x = x;

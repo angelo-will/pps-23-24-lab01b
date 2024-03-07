@@ -6,7 +6,7 @@ public class Pawn extends ChessPieceAbstract {
         super(row, column);
     }
 
-    public Pawn(Pair<Integer, Integer> position){
+    public Pawn(Pair<Integer, Integer> position) {
         super(position);
     }
 

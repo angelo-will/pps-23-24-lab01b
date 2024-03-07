@@ -9,11 +9,10 @@ public interface ChessPiece extends Movement {
      */
     Pair<Integer, Integer> getPosition();
 
-    
     /**
      * Set the new position of chess piece.
      * 
-     * @param row new row of piece
+     * @param row    new row of piece
      * @param column new column of piece
      * @throws IllegalArgumentException if row or column are negative
      */
