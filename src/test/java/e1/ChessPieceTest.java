@@ -38,25 +38,34 @@ public class ChessPieceTest {
         assertEquals(this.startinKnightPosition, this.knight.getPosition());
     }
 
+    public void testSetPosition(ChessPiece chessPiece, Pair<Integer, Integer> position) {
+        chessPiece.setPosition(position.getX(), position.getY());
+        assertEquals(position, chessPiece.getPosition());
+    }
+
     @Test
     public void testKnightSetPosition() {
-        Pair<Integer, Integer> newKnightPosition = new Pair<Integer, Integer>(2, 1);
-        this.knight.setPosition(newKnightPosition.getX(), newKnightPosition.getY());
-        assertEquals(newKnightPosition, this.knight.getPosition());
+        this.testSetPosition(this.knight, new Pair<Integer, Integer>(2, 1));
     }
 
     @Test
-    public void testExceptionSubZeroMovements() {
-        List<Pair<Integer, Integer>> listSubZeroPositions = new ArrayList<>();
-        listSubZeroPositions.add(new Pair<Integer, Integer>(-1, -1));
-        listSubZeroPositions.add(new Pair<Integer, Integer>(-1, 0));
-        listSubZeroPositions.add(new Pair<Integer, Integer>(0, -1));
-        listSubZeroPositions.forEach(position -> assertThrows(IllegalArgumentException.class,
-                () -> this.knight.move(position.getX(), position.getY())));
+    public void testPawnSetPosition() {
+        this.testSetPosition(this.pawn, new Pair<Integer, Integer>(2, 1));
+    }
+
+    public void testExceptionWrongMovements(ChessPiece chessPiece, List<Pair<Integer, Integer>> wrongMovementsList) {
+        wrongMovementsList.forEach(position -> assertThrows(IllegalArgumentException.class,
+                () -> chessPiece.move(position.getX(), position.getY())));
     }
 
     @Test
-    public void testInvalidMovements() {
+    public void testKnightSubZeroMovements() {
+        List<Pair<Integer, Integer>> listSubZeroPositions = this.getListSubZeroPositions();
+        this.testExceptionWrongMovements(this.knight, listSubZeroPositions);
+    }
+
+    @Test
+    public void testKnightInvalidMovements() {
         Pair<Integer, Integer> movementNotValid1 = new Pair<Integer, Integer>(this.startinKnightPosition.getX(),
                 this.startinKnightPosition.getY());
         Pair<Integer, Integer> movementNotValid2 = new Pair<Integer, Integer>(1, 1);
@@ -80,7 +89,7 @@ public class ChessPieceTest {
     }
 
     @Test
-    public void testMovements() {
+    public void testKnightMovements() {
         List<Pair<Integer, Integer>> movements = new ArrayList<>();
         movements.add(new Pair<Integer, Integer>(2, 1));
         movements.add(new Pair<Integer, Integer>(1, 3));
@@ -89,4 +98,13 @@ public class ChessPieceTest {
         var finalKnightPosition = movements.get(movements.size() - 1);
         assertEquals(finalKnightPosition, this.knight.getPosition());
     }
+
+    private List<Pair<Integer, Integer>> getListSubZeroPositions() {
+        List<Pair<Integer, Integer>> listSubZeroPositions = new ArrayList<>();
+        listSubZeroPositions.add(new Pair<Integer, Integer>(-1, -1));
+        listSubZeroPositions.add(new Pair<Integer, Integer>(-1, 0));
+        listSubZeroPositions.add(new Pair<Integer, Integer>(0, -1));
+        return listSubZeroPositions;
+    }
+
 }
