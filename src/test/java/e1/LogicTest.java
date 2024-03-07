@@ -19,11 +19,11 @@ public class LogicTest {
 
   @BeforeEach
   public void initializeLogic() {
-    var startKnightPosition = new Pair<Integer, Integer>(1, 3);
-    var startPawnPosition = new Pair<Integer, Integer>(0, 0);
+    var startKnightPosition = this.createIntegerPair(1, 3);
+    var startPawnPosition = this.createIntegerPair(0, 0);
 
     this.captureSequence = new ArrayList<>();
-    this.captureSequence.add(new Pair<Integer, Integer>(2, 1));
+    this.captureSequence.add(this.createIntegerPair(2, 1));
     this.captureSequence.add(startPawnPosition);
 
     this.logic = new LogicsImpl(fieldSize, startPawnPosition, startKnightPosition);
@@ -33,13 +33,13 @@ public class LogicTest {
   }
 
   @Test
-  public void testKingPosition() {
+  public void testKnightPosition() {
     assertTrue(this.logic.hasKnight(this.knightPosition.getX(), this.knightPosition.getY()));
   }
 
   @Test
-  public void testWrongKingPosition() {
-    Pair<Integer, Integer> wrongPosition = new Pair<Integer, Integer>((this.knightPosition.getX() + 1) % fieldSize,
+  public void testWrongKnightPosition() {
+    Pair<Integer, Integer> wrongPosition = this.createIntegerPair((this.knightPosition.getX() + 1) % fieldSize,
         (this.knightPosition.getY() + 1) % fieldSize);
     assertFalse(this.logic.hasKnight(wrongPosition.getX(), wrongPosition.getY()));
   }
@@ -51,7 +51,7 @@ public class LogicTest {
 
   @Test
   public void testWrongPawnPosition() {
-    Pair<Integer, Integer> wrongPosition = new Pair<Integer, Integer>((this.pawnPositions.getX() + 1) % fieldSize,
+    Pair<Integer, Integer> wrongPosition = this.createIntegerPair((this.pawnPositions.getX() + 1) % fieldSize,
         (this.pawnPositions.getY() + 1) % fieldSize);
     assertFalse(this.logic.hasPawn(wrongPosition.getX(), wrongPosition.getY()));
   }
@@ -60,7 +60,7 @@ public class LogicTest {
   public void testKnightMovement() {
     int newRowKnight = this.knightPosition.getX() + 2;
     int newColumnKnight = this.knightPosition.getY() + 1;
-    Pair<Integer, Integer> newKnightPosition = new Pair<Integer, Integer>(newRowKnight, newColumnKnight);
+    Pair<Integer, Integer> newKnightPosition = this.createIntegerPair(newRowKnight, newColumnKnight);
     if (this.isPositionOutsideField(newKnightPosition.getX(), newKnightPosition.getY())) {
       assertThrows(IllegalArgumentException.class, () -> this.logic.hit(newRowKnight, newColumnKnight));
     } else {
@@ -114,6 +114,6 @@ public class LogicTest {
   }
 
   private boolean isPositionOutsideField(int row, int column) {
-		return row < 0 || column < 0 || row >= this.fieldSize || column >= this.fieldSize;
-	}
+    return row < 0 || column < 0 || row >= this.fieldSize || column >= this.fieldSize;
+  }
 }
